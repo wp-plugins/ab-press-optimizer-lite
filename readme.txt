@@ -35,6 +35,8 @@ Start A/B testing minutes without any HTML knowledge required. You're not given 
 * Additional conversion triggers like form submission and click interactions
 * Run same experiment across multiple pages
 
+[Click Here to Upgrade to AB Press Optimizer Pro! &raquo;](http://abpressoptimizer.com?utm_source=wordpress&utm_medium=link&utm_campaign=abp_lite)
+
 [vimeo https://vimeo.com/71921030]
 
 [Click Here to Upgrade to AB Press Optimizer Pro! &raquo;](http://abpressoptimizer.com?utm_source=wordpress&utm_medium=link&utm_campaign=abp_lite)
