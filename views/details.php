@@ -30,7 +30,7 @@
 	?>
 
 	<div class="ab-press-header">
-		<img src="<?php echo plugins_url( 'ab-press-optimizer/assets/ab-logo.png') ?>">
+		<img src="<?php echo plugins_url( 'ab-press-optimizer-lite/assets/ab-logo.png') ?>">
 	</div>
 
 	<div class="ab-press-banner">

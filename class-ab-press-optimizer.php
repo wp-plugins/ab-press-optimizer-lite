@@ -23,7 +23,7 @@ class ABPressOptimizer {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.2';
+	protected $version = '1.0.0';
 
 	/**
 	 * Unique identifier for your plugin.
