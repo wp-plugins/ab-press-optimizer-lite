@@ -1,6 +1,6 @@
 === AB Press Optimizer ===
 Contributors: IvanLopez
-Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, ab test, a/b test, a b test, a-b test, a b testing, a-b testing
+Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, AB test, A/B test, A B test, A-B test, A B testing, A-B testing, A/B Split Test
 Requires at least: 3.0
 Requires at least: 3.4.2
 Tested up to: 3.6
