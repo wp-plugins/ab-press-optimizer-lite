@@ -14,7 +14,7 @@ The Easy Way to Increase Conversion in WordPress.
 
 A/B testing integrated directly into your WordPress site. Quickly and easily create dozens of different versions of your buttons and headlines. Know the status of your experiments in real time as customers are visiting your site. Independently track conversions and visitors for each version, keeping an eye which one is converting best.
 
-Start A/B testing minutes without any HTML knowledge required. You're not given a script to embed; simply adding a Shortcode to your post, page or custom post type and you’re ready to go. Quickly setup your experiment by filling in a few simple text inputs. We have taken out all the guest work and made the interface straight forward. With A/B Testing integrated into WordPress you have complete access and control of your data.
+Start A/B testing in minutes without any HTML knowledge required. You're not given a script to embed; simply adding a Shortcode to your post, page or custom post type and you’re ready to go. Quickly setup your experiment by filling in a few simple text inputs. We have taken out all the guest work and made the interface straight forward. With A/B Testing integrated into WordPress you have complete access and control of your data.
 
 ###AB Press Optimizer Plugin Features:###
 
