@@ -1,50 +1,47 @@
 <?php 
 
-if(isset($_COOKIE[ '_ab_press_test']) && !is_admin())
+add_action('wp_footer', 'ab_press_create_reffering');
+
+/**
+ * Store a new experiment and it's variations
+ *
+ * @since    1.1.2
+ */
+function ab_press_create_reffering()
 {
-	$ab_press_data = ab_press_getExperimentIds();
+	?>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
 
-	if(!$ab_press_data) return false;
+			jQuery.each(document.cookie.split(/; */), function(){
+				var segments = this.split('=');
 
-	foreach ($ab_press_data as $experiment) {
-		$id = $experiment->id;
-
-		if(isset($_COOKIE[ '_ab_press_exp_' . $experiment->id]))
-		{
-			$varId = isset($_COOKIE[ '_ab_press_exp_' . $experiment->id . '_var']) ? $_COOKIE[ '_ab_press_exp_' . $experiment->id . '_var'] :  false;
-			$hasReference = isset($_COOKIE[ '_ab_press_ref_' . $experiment->id]) ? $_COOKIE[ '_ab_press_ref_' . $experiment->id] : false;
-			$referingPage = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : false;
-
-			if(!$varId || !$hasReference) return false;
-
-			if( ab_press_full_url() != $experiment->url) return false;
-
-			if($hasReference == $referingPage && !isset($_COOKIE['_ab_press_exp_' . $experiment->id .'_conv']) )
-			{
-				if($varId == "c")
+				if(this.search('_ab_press_exp_') == 0)
 				{
-					ab_press_updateConvertion($id, "control", $experiment->original_convertions);
-				}
-				else
-				{
-					$variationCount = 0;
-					foreach ($experiment->variations as $variation) {
-						if($variation->id == $varId)
-						{
-							$variationCount =$variation->convertions;
-							break;
-						}
-						
+					id = segments[0].split('_ab_press_exp_')[1];
+					varid = segments[1];
+					var URL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+					if(readCookie('_ab_press_test') == readCookie('_ab_press_ref_'+id) && jQuery.trim(readCookie('_ab_press_des_'+id)) == jQuery.trim(URL))
+					{	
+						jQuery.post(
+							abPressAjax.ajaxurl,
+							{
+								action : 'ab-press-optimizer-submit',
+								experiment : id,
+								variation : varid,
+								_wpnonce : abPressAjax.abpresNonce
+							},
+							function( response ) {}
+						);
 					}
-					ab_press_updateConvertion($varId, "variation", $variationCount );
 				}
+			})
 
-				setcookie('_ab_press_ref_' . $experiment->id, "", time()-3600, '/');
-				setcookie('_ab_press_exp_' . $experiment->id .'_conv', 1, time()+60*60*24*1);
-			}
-		
-		}
-	}
+			createCookie("_ab_press_test",  "<?php echo ab_press_full_url() ?>", 1);
+
+		})
+	</script>
+	<?php
 }
 
 
@@ -550,7 +547,8 @@ function ab_press_normalcdf($mean, $sigma, $to) {
 /**
  * Create markup for experiment also used inside of code
  */
-function ab_press_optimizer($id, $content)
+
+function ab_press_optimizer($id, $content, $multipage = false)
 {
 	$trialMode = false;
 	$isReturningUser = false;
@@ -571,26 +569,33 @@ function ab_press_optimizer($id, $content)
 		$trialMode = true;
 
 	if($isBot)
-		return $content;
+		return do_shortcode( $content );
 
 	$experiment = ab_press_getExperiment($id);
-	$control = (object) array('id'=>$experiment->id, 'type'=>'control', 'value' => $content, 'class' => '');
+	$control = (object) array('id'=>"c", 'type'=>'control', 'value' => $content, 'class' => '');
 	array_unshift($experiment->variations, $control);
 
 	if($experiment->status != 'running') return $content; 
 
-	//Select Experiment
-	if(isset($_COOKIE["_ab_press_exp_".$id]))
-	{
-		$currVariation = $_COOKIE["_ab_press_exp_".$id."_var"];
 
-		if($currVariation == "c")
+
+	//Select Experiment
+	if(isset($_COOKIE["_ab_press_exp_".$id]) || isset($GLOBALS['abtestonpage']))
+	{
+
+		if(isset($_COOKIE["_ab_press_exp_".$id]))
+			$currVariation = $_COOKIE["_ab_press_exp_".$id];
+		else
+			$currVariation =  $GLOBALS['abtestonpage'];
+
+		if($currVariation === "c")
 		{
 			$variation = $control;
 		}
 		else
 		{
 			foreach ($experiment->variations as $var) {
+
 				if($currVariation == $var->id)
 				{
 					$variation = $var;
@@ -600,32 +605,43 @@ function ab_press_optimizer($id, $content)
 			
 		}
 
+
+
 		$isReturningUser = true;
+
 	}
 	else
 	{
 		$randomVariation = rand(0 , count($experiment->variations)-1) ;
 		$variation = $experiment->variations[$randomVariation];
-
 		$varId = ($variation->type == "control") ? "c" : $variation->id;
+
+		$GLOBALS['abtestonpage'] = $varId;
 
 		if(!$trialMode)
 		{
 			?>
 			<script type="text/javascript">
-				createCookie("_ab_press_exp_<?php echo $id ?>", 1, 45);
-				createCookie("_ab_press_exp_<?php echo $id ?>_var", "<?php echo $varId ?>", 45);
-				createCookie("_ab_press_test", 1, 45);
+				createCookie("_ab_press_exp_<?php echo $id ?>", "<?php echo $varId ?>", 45);
 			</script>
 			<?php
-			if($experiment->goal_type != "clickEvent")
+			if($multipage){
+			?>
+			<script type="text/javascript">
+				createCookie("_ab_press_multi_<?php echo $id ?>",  1, 1);
+			</script>
+			<?php }
+
+			if($experiment->goal_type != "clickEvent"){
 			?>
 			<script type="text/javascript">
 				createCookie("_ab_press_ref_<?php echo $id ?>",  "<?php echo ab_press_full_url(); ?>", 1);
+				createCookie("_ab_press_des_<?php echo $id ?>",  "<?php echo $experiment->url; ?>", 1);
+				createCookie("_ab_press_test",  "<?php echo ab_press_full_url(); ?>", 1);
 			</script>
-			<?php
+			<?php }
 		}
-	}
+	}	
 
 	$tag = ab_press_getTag($content);
 	$attributes = ab_press_getAttributes($content, $tag, $variation, $experiment->goal_type,  $experiment->id);
@@ -635,14 +651,14 @@ function ab_press_optimizer($id, $content)
 		if(!$trialMode && !$isReturningUser)
 			ab_press_updateImpression($id, 'control', $experiment->original_visits);
 
-		return ab_press_createControl($content, $tag, $attributes);
+		return  do_shortcode( ab_press_createControl($content, $tag, $attributes) );
 	}
 	else
 	{
 		if(!$trialMode && !$isReturningUser)
 			ab_press_updateImpression($variation->id, 'variation', $variation->visits);
 
-		return ab_press_createVariation($variation, $tag, $attributes, $experiment);
+		return  do_shortcode( ab_press_createVariation($variation, $tag, $attributes, $experiment) );
 	}
 }
 
@@ -661,15 +677,17 @@ function ab_press_full_url()
  */
 function ab_press_getTag($content)
 {
-	$tagTypes = array('a', 'p', 'div', 'span', 'section', 'input', 'img' );
+	$tagTypes = array('div', 'section', 'p', 'a',  'span',  'input', 'img' );
 	$tag = '';
+
 	foreach ($tagTypes as $tagType) {
 		if(preg_match('%(^<'.$tagType.'[^>]*>.*?^</'.$tagType.'>)%i', $content, $tempTag) || preg_match('#<'.$tagType.'[^>]*>#i', $content, $tempTag)  )
 		{
+			
 			$tag = $tagType;
+			break;
 		}
 	}
-
 
 	return $tag;
 }
@@ -683,35 +701,47 @@ function ab_press_getAttributes($content, $tag, $variation, $event, $id)
 {
 	$attributes = "";
 
-	if(!empty($tag) && preg_match_all('/(alt|type|title|src|href|class|id|value|name)=("[^"]*")/i', $content, $elemtAttributes))
+	$ab_press_class = ' ab-press-hock ';
+	$attr = array();
+
+
+	if($event == "clickEvent")
 	{
-		$attr = array();
+		$ab_press_class = ' ab-press-action ';
+		if($variation->type == "control")
+			$attr['abpress'] =  $id .'-c' ;
+		else
+			$attr['abpress'] =  $id .'-'.$variation->id ;
+	}
+	elseif($event == "clickEventAjax")
+	{
+		$ab_press_class = ' ab-press-action-ajax ';
+		if($variation->type == "control")
+			$attr['abpress'] =  $id .'-c' ;
+		else
+			$attr['abpress'] =  $id .'-'.$variation->id ;
 
-		for ($i=0; $i < count($elemtAttributes[1]); $i++) { 
-			$tempAttr = str_replace('"',"", $elemtAttributes[2][$i]);
-			$tempAttr = str_replace("'","", $tempAttr);
-			$attr[strtolower($elemtAttributes[1][$i])] = $tempAttr;
-		}
-
-		$ab_press_class = ' ab-press-hock ';
+	}
 
 
-		if($event == "clickEvent")
-		{
+	if(!empty($tag) )
+	{	
 
-			$ab_press_class = ' ab-press-action ';
-			if($variation->type == "control")
-				$attr['abpress'] =  $id .'-c' ;
-			else
-				$attr['abpress'] =  $id .'-'.$variation->id ;
-		}
+		$doc = new DOMDocument();
+		libxml_use_internal_errors(true);
+		$doc->loadHTML($content);
+		$nodes = $doc->getElementsByTagName($tag);
 
+	    if ($nodes->item(0)->hasAttributes()) {
+	        foreach($nodes->item(0)->attributes as $a) {
+	            $attr[strtolower($a->name)] = $a->value;
+	        }
+	    }
 
 		if(isset($attr['class']))
 			$attr['class'] = (string) $attr['class'] . $ab_press_class . $variation->class;
 		else
 			$attr['class'] = $ab_press_class;
-
 
 
 		if($variation->type == "img")
@@ -720,21 +750,22 @@ function ab_press_getAttributes($content, $tag, $variation, $event, $id)
 
 		}
 
-
-		foreach ($attr as $key => $value) {
-			$attributes .= ( ' '. $key . '="' .$value .'" ');
-		}
 	}
 	elseif($variation->type == "img" && empty($tag))
 	{
 		$attr = array();
 		$attr['src'] = $variation->value; 
-		foreach ($attr as $key => $value) {
-			$attributes .= ( ' '. $key . '="' .$value .'" ');
-		}
+		
+	}
+	else
+	{
+		$attr['class'] = $ab_press_class;
 	}
 
 
+	foreach ($attr as $key => $value) {
+			$attributes .= ( ' '. $key . '="' .$value .'" ');
+		}
 
 	return $attributes;
 }
@@ -747,16 +778,33 @@ function ab_press_getAttributes($content, $tag, $variation, $event, $id)
 function ab_press_getContent($content, $tag){
 	$tagContent = "";
 
-	if($tag != "img" && $tag != "input")
+	if($tag != "img" && $tag != "input" && $tag != "")
 	{
-	    if(preg_match("/<".$tag."[^>]*>(.*?)<\/".$tag.">/is", $content, $matches))
-	    {
-	    	$tagContent = $matches[1];
-	    }
+	    $doc = new DOMDocument();
+		libxml_use_internal_errors(true);
+		$doc->loadHTML($content);
+		$nodes = $doc->getElementsByTagName($tag);
+		$chidlNode = $nodes->item(0);
+		$tagContent = DOMinnerHTML($nodes->item(0));
+		// $doc->saveHTML($nodes->item(0));
+		//$tagContent = $chidlNode->ownerDocument->saveHTML($chidlNode);
 	}
 
 	return $tagContent;
 }
+
+function DOMinnerHTML($element) 
+{ 
+    $innerHTML = ""; 
+    $children = $element->childNodes; 
+    foreach ($children as $child) 
+    { 
+        $tmp_dom = new DOMDocument(); 
+        $tmp_dom->appendChild($tmp_dom->importNode($child, true)); 
+        $innerHTML.=trim($tmp_dom->saveHTML()); 
+    } 
+    return $innerHTML; 
+} 
 
 /**
  * Create a control markup
@@ -779,6 +827,9 @@ function ab_press_createControl($content, $tag, $attributes)
 	{
 		if(empty($content))
 			$result = "";
+		elseif (!preg_match("/<\/$tag>$/", $content, $matches) ) {
+			$result = $content;
+		}
 		else
 			$result = "<$tag $attributes>$tagContent</$tag>";
 	}
@@ -792,19 +843,22 @@ function ab_press_createControl($content, $tag, $attributes)
  * @return String
  */
 function ab_press_createVariation($variation, $tag, $attributes, $experiment){
-	
+ 
 	if($variation->type == "html")
 	{
 		$html = $variation->value;
 		$htmlTag = ab_press_getTag($html);
-		$htmlAttributes = ab_press_getAttributes($html, $tag, $variation, $experiment->goal_type,  $experiment->id);
+		$htmlAttributes = ab_press_getAttributes($html, $htmlTag, $variation, $experiment->goal_type,  $experiment->id);
 		$htmlContent = ab_press_getContent($html, $htmlTag);
 
-		if(!$tag)
-			return $html ;
+		//print_r($htmlAttributes);
+
 
 		if(!$htmlTag)
-			return "<$tag $attributes>$variation->value</$tag>";
+			return "<$tag $htmlAttributes>$variation->value</$tag>";
+		elseif (!preg_match("/<\/$htmlTag>$/", $html, $matches) ) {
+			return $html;
+		}
 		else
 			return "<$htmlTag $htmlAttributes>$htmlContent</$htmlTag>";
 	}
@@ -814,10 +868,12 @@ function ab_press_createVariation($variation, $tag, $attributes, $experiment){
 	}
 	else
 	{
-		if ($tag == "input") 
+		if ($tag == "input")
 			return "<input $attributes />";
-		else
+		elseif( ! empty( $tag ) )
 			return "<$tag $attributes>$variation->value</$tag>";
+		else
+			return $variation->value;
 	}
 }
 

@@ -1,9 +1,8 @@
 === AB Press Optimizer ===
 Contributors: IvanLopez
-Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, AB test, A/B test, A B test, A-B test, A B testing, A-B testing, A/B Split Test
-Requires at least: 3.0
+Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, ab test, a/b test, a b test, a-b test, a b testing, a-b testing
 Requires at least: 3.4.2
-Tested up to: 3.6
+Tested up to: 3.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +13,7 @@ The Easy Way to Increase Conversion in WordPress.
 
 A/B testing integrated directly into your WordPress site. Quickly and easily create dozens of different versions of your buttons and headlines. Know the status of your experiments in real time as customers are visiting your site. Independently track conversions and visitors for each version, keeping an eye which one is converting best.
 
-Start A/B testing in minutes without any HTML knowledge required. You're not given a script to embed; simply adding a Shortcode to your post, page or custom post type and you’re ready to go. Quickly setup your experiment by filling in a few simple text inputs. We have taken out all the guest work and made the interface straight forward. With A/B Testing integrated into WordPress you have complete access and control of your data.
+Start A/B testing minutes without any HTML knowledge required. You're not given a script to embed; simply adding a Shortcode to your post, page or custom post type and you’re ready to go. Quickly setup your experiment by filling in a few simple text inputs. We have taken out all the guest work and made the interface straight forward. With A/B Testing integrated into WordPress you have complete access and control of your data.
 
 ###AB Press Optimizer Plugin Features:###
 
@@ -74,4 +73,8 @@ Start A/B testing in minutes without any HTML knowledge required. You're not giv
 
 = 1.0.0 =
 * Initial release
+
+= 1.1.0 =
+* Optimized HTML Parser
+* Converted Conversion to Happen Via Ajax
 

@@ -23,7 +23,7 @@ class ABPressOptimizer {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.0';
+	protected $version = '1.1.0';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -536,7 +536,7 @@ class ABPressOptimizer {
 					experiment_id INT NOT NULL,
 					type VARCHAR(100) NOT NULL DEFAULT '',
 					name VARCHAR(250) NOT NULL DEFAULT '',
-					value VARCHAR(500) NOT NULL DEFAULT '',
+					value TEXT NOT NULL DEFAULT '',
 					class VARCHAR(500) NOT NULL DEFAULT '',
 					visits INT NOT NULL DEFAULT 0,
 					convertions INT NOT NULL DEFAULT 0,
@@ -545,6 +545,17 @@ class ABPressOptimizer {
 
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			dbDelta($sql);
+		}
+		else{
+			global $wpdb;
+			$upgradedTable = $wpdb->get_row("SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name =  '" . $table_name . "' AND COLUMN_NAME =  'value'");
+
+			if($upgradedTable->DATA_TYPE != "text")
+			{
+				$sql = "ALTER TABLE " . $table_name . " MODIFY COLUMN value TEXT";
+				$wpdb->query($sql);
+			}
+			
 		}
 	}
 

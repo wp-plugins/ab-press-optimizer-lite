@@ -9,7 +9,7 @@
  * Plugin Name: AB Press Optimizer Lite
  * Plugin URI:  http://ABPressOptimizer.com
  * Description: AB Press Optimizer A/B testing integrated directly into your WordPress site. Quickly and easily create dozens of different versions of your images, buttons and headlines. Showing you which versions will increase your bottom line. 
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      Ivan Lopez
  * Author URI:  http://ABPressOptimizer.com
  * License: GPLv2
