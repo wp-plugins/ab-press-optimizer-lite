@@ -2,7 +2,7 @@
 Contributors: IvanLopez
 Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, ab test, a/b test, a b test, a-b test, a b testing, a-b testing
 Requires at least: 3.4.2
-Tested up to: 3.8
+Tested up to: 3.9.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
