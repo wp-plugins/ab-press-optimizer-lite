@@ -1,5 +1,5 @@
 === AB Press Optimizer ===
-Contributors: IvanLopez
+Contributors: Mammothology
 Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, ab test, a/b test, a b test, a-b test, a b testing, a-b testing
 Requires at least: 3.4.2
 Tested up to: 3.9.1
