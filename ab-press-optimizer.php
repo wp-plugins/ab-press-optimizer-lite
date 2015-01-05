@@ -1,22 +1,21 @@
 <?php
 /**
  * @package   ab-press-optimizer
- * @author    Ivan Lopez
+ * @author    Mammothology
  * @link      http://ABPressOptimizer.com
- * @copyright 2013 Ivan Lopez
+ * @copyright 2014 Mammothology
  *
  * @wordpress-plugin
  * Plugin Name: AB Press Optimizer Lite
  * Plugin URI:  http://ABPressOptimizer.com
- * Description: AB Press Optimizer A/B testing integrated directly into your WordPress site. Quickly and easily create dozens of different versions of your images, buttons and headlines. Showing you which versions will increase your bottom line. 
- * Version:     1.1.0
- * Author:      Ivan Lopez
+ * Description: AB Press Optimizer A/B testing integrated directly into your WordPress site. Quickly and easily create dozens of different versions of your images, buttons, content blocks, forms and headlines.
+ * Version:     1.1.1
+ * Author:      Mammothology
  * Author URI:  http://ABPressOptimizer.com
- * License: GPLv2
  * Text Domain: ab-press-optimizer-locale
  *
  * ------------------------------------------------------------------------
- * Copyright 2013 AB Press Optimizer (http://ABPressOptimizer.com)
+ * Copyright 2014 AB Press Optimizer (http://ABPressOptimizer.com)
  *
  **/
 

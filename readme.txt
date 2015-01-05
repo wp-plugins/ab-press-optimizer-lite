@@ -2,7 +2,7 @@
 Contributors: Mammothology
 Tags: A/B Testing, A/B Split Testing, AB Testing, AB Split Testing, Conversion Optimization, ab test, a/b test, a b test, a-b test, a b testing, a-b testing
 Requires at least: 3.4.2
-Tested up to: 3.9.1
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,8 +31,12 @@ Start A/B testing minutes without any HTML knowledge required. You're not given 
 * Unlimited experiment variations
 * Additional variation type for testing complete content blocks and images
 * Export your experiments to CSV
+* Test page and post titles
 * Additional conversion triggers like form submission and click interactions
 * Run same experiment across multiple pages
+* Javascript loading option so you can run tests on heavily cached websites
+* More detailed metrics and charts about your users
+* Full support and regular updates
 
 [Click Here to Upgrade to AB Press Optimizer Pro! &raquo;](http://abpressoptimizer.com?utm_source=wordpress&utm_medium=link&utm_campaign=abp_lite)
 
@@ -77,4 +81,8 @@ Start A/B testing minutes without any HTML knowledge required. You're not given 
 = 1.1.0 =
 * Optimized HTML Parser
 * Converted Conversion to Happen Via Ajax
+
+= 1.1.1 =
+* Improved documentation
+* Removed error on activation
 
